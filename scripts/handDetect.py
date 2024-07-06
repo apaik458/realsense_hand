@@ -1,9 +1,4 @@
 #!/usr/bin/env python3
-from __future__ import print_function
-
-import roslib
-roslib.load_manifest('realsense_nodes')
-
 import rospy
 import cv2
 import mediapipe as mp
@@ -17,7 +12,7 @@ class image_converter:
         self.bridge = CvBridge()
         
         self.image_sub = rospy.Subscriber("/camera/color/image_raw", Image, self.callback)
-        self.image_pub = rospy.Publisher("hand_point_topic", Point)
+        self.image_pub = rospy.Publisher("/hand_point_topic", Point, queue_size=10)
 
         self.mp_hands = mp.solutions.hands.Hands()
 
@@ -54,7 +49,7 @@ class image_converter:
 def main():
     ic = image_converter()
 
-    rospy.init_node('image_converter', anonymous=True)
+    rospy.init_node('handDetect', anonymous=True)
 
     rospy.spin()
     cv2.destroyAllWindows()
